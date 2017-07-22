@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-22-12.png">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-22-13.png">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-22-14.png">
-<meta property="og:updated_time" content="2017-07-22T02:53:03.000Z">
+<meta property="og:updated_time" content="2017-07-22T02:54:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android使用Jenkins实现自动化打包">
 <meta name="twitter:description" content="Android项目开发过程中，每次测试打包都会浪费较长的时间，为了能节省时间、将精力更多的放在代码编写上，可利用Jenkins工具进行自动化构建打包，当仓库中的代码有变化时，自动构建打包，节省时间也是迈出开发自动化的第一步。 开发环境Mac OS:10.11.6Android Studio:2.3.3adb:1.0.36gradle:3.5jenkins:2.70">
@@ -187,19 +187,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Android项目开发过程中，每次测试打包都会浪费较长的时间，<br>为了能节省时间、将精力更多的放在代码编写上，<br>可利用Jenkins工具进行自动化构建打包，<br>当仓库中的代码有变化时，自动构建打包，<br>节省时间也是迈出开发自动化的第一步。</p>
+        <p>Android项目开发过程中，每次测试打包都会浪费较长的时间，为了能节省时间、将精力更多的放在代码编写上，<br>可利用Jenkins工具进行自动化构建打包，当仓库中的代码有变化时，自动构建打包，节省时间也是迈出开发自动化的第一步。</p>
 <h3 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h3><p>Mac OS:10.11.6<br>Android Studio:2.3.3<br>adb:1.0.36<br>gradle:3.5<br>jenkins:2.70</p>
 <a id="more"></a>
-<h3 id="运行Jenkins"><a href="#运行Jenkins" class="headerlink" title="运行Jenkins"></a>运行Jenkins</h3><p>Jenkins安装完成之后，直接命令行中运行jenkins命令即可，<br>运行成功之后在浏览器中输入<br><a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a>。</p>
+<h3 id="运行Jenkins"><a href="#运行Jenkins" class="headerlink" title="运行Jenkins"></a>运行Jenkins</h3><p>Jenkins安装完成之后，直接命令行中运行jenkins命令即可，运行成功之后在浏览器中输入<br><a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a>。</p>
 <h3 id="配置Jenkins插件"><a href="#配置Jenkins插件" class="headerlink" title="配置Jenkins插件"></a>配置Jenkins插件</h3><p>第一次运行会提示安装插件，选择推荐安装即可。</p>
 <p><img src="/assets/blogImg/2017-07-22-1.png" alt=""></p>
 <p>安装完成之后，提示设置用户名、密码等信息。</p>
 <p><img src="/assets/blogImg/2017-07-22-2.png" alt=""></p>
-<p>除了推荐安装的插件之外，Android实现自动构建还需要另外一个插件Android Lint，需要手动安装。<br>系统设置—插件管理，搜索安装即可。</p>
+<p>除了推荐安装的插件之外，Android实现自动构建还需要另外一个插件Android Lint，需要手动安装。系统设置—插件管理，搜索安装即可。</p>
 <p><img src="/assets/blogImg/2017-07-22-3.png" alt=""></p>
-<h3 id="设置sdk路径"><a href="#设置sdk路径" class="headerlink" title="设置sdk路径"></a>设置sdk路径</h3><p>系统管理—系统设置—全局属性，新建属性，输入key值和value值，<br>其中key值必须为ANDROID_HOME。</p>
+<h3 id="设置sdk路径"><a href="#设置sdk路径" class="headerlink" title="设置sdk路径"></a>设置sdk路径</h3><p>系统管理—系统设置—全局属性，新建属性，输入key值和value值，其中key值必须为ANDROID_HOME。</p>
 <p><img src="/assets/blogImg/2017-07-22-4.png" alt=""></p>
-<h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h3><p>在此之前，需要在github上或者内网git仓库新建项目，此例中使用github。<br>地址：<a href="https://github.com/loaLakers/HelloWorld.git" target="_blank" rel="external">https://github.com/loaLakers/HelloWorld.git</a>。</p>
+<h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h3><p>在此之前，需要在github上或者内网git仓库新建项目，此例中使用github。地址：<a href="https://github.com/loaLakers/HelloWorld.git" target="_blank" rel="external">https://github.com/loaLakers/HelloWorld.git</a>。</p>
 <p><img src="/assets/blogImg/2017-07-22-5.png" alt=""></p>
 <p>在源码管理中配置git仓库地址及密码等验证信息。</p>
 <p><img src="/assets/blogImg/2017-07-22-6.png" alt=""></p>
@@ -215,7 +215,7 @@
 <p><img src="/assets/blogImg/2017-07-22-11.png" alt=""><br><img src="/assets/blogImg/2017-07-22-12.png" alt=""></p>
 <p>将代码提交到github后，再次点击立即构建，可在相同的目录下生成已经签名的APK文件，并且名称按照设置规定的形式。</p>
 <p><img src="/assets/blogImg/2017-07-22-13.png" alt=""></p>
-<h3 id="自动定时检测打包"><a href="#自动定时检测打包" class="headerlink" title="自动定时检测打包"></a>自动定时检测打包</h3><p>Jenkins可以设置定时检查git仓库是否有更新，如有更新自动构建打包，实现自动化。<br>点击MyView，点击helloworld项目，点击配置，在构建触发器模块设置。</p>
+<h3 id="自动定时检测打包"><a href="#自动定时检测打包" class="headerlink" title="自动定时检测打包"></a>自动定时检测打包</h3><p>Jenkins可以设置定时检查git仓库是否有更新，如有更新自动构建打包，实现自动化。点击MyView，点击helloworld项目，点击配置，在构建触发器模块设置。</p>
 <p><img src="/assets/blogImg/2017-07-22-14.png" alt=""></p>
 <h3 id="gradle-build配置代码"><a href="#gradle-build配置代码" class="headerlink" title="gradle.build配置代码"></a>gradle.build配置代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">signingConfigs &#123;//签名的配置    release &#123;        storeFile file(&quot;test.jks&quot;)        storePassword &apos;123456&apos;        keyAlias &apos;test&apos;        keyPassword &apos;123456&apos;    &#125;&#125;applicationVariants.all &#123; variant -&gt;    if (variant.buildType.name == &apos;release&apos;) &#123;        variant.outputs.each &#123; output -&gt;            def outputFile = output.outputFile            if (outputFile != null &amp;&amp; outputFile.name.endsWith(&apos;.apk&apos;)) &#123;                def fileName = &quot;$&#123;releaseTime()&#125;_com.wzh_helloworld_$&#123;defaultConfig.versionName&#125;.apk&quot;                output.outputFile = new File(outputFile.parent, fileName)            &#125;        &#125;    &#125;&#125;signingConfig signingConfigs.releaseapplicationVariants.all &#123; variant -&gt;    if (variant.buildType.name == &apos;release&apos;) &#123;        variant.outputs.each &#123; output -&gt;            def outputFile = output.outputFile            if (outputFile != null &amp;&amp; outputFile.name.endsWith(&apos;.apk&apos;)) &#123;                def fileName = &quot;$&#123;releaseTime()&#125;_com.wzh_helloworld_$&#123;defaultConfig.versionName&#125;.apk&quot;                output.outputFile = new File(outputFile.parent, fileName)            &#125;        &#125;    &#125;&#125;lintOptions &#123;    abortOnError false&#125;def releaseTime() &#123;    return new Date().format(&quot;yyyy-MM-dd-HH:mm:ss&quot;, TimeZone.getTimeZone(&quot;Asia/Chongqing&quot;))&#125;</div></pre></td></tr></table></figure>
 <p>—— END. loaLakers on 07.22</p>
@@ -440,11 +440,11 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color4">Database</a>
+                <a href="javascript:void(0)" class="color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color3">Android</a>
+                <a href="javascript:void(0)" class="color4">Database</a>
               </li>
              
               <li class="article-tag-list-item">
