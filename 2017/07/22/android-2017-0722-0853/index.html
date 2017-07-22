@@ -8,13 +8,13 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Android使用Jenkins实现自动化打包 | loaLakers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Android项目开发过程中，每次测试打包都会浪费较长的时间，为了能节省时间、将精力更多的放在代码编写上，可利用Jenkins工具进行自动化构建打包，当仓库中的代码有变化时，自动构建打包，节省时间也是迈出开发自动化的第一步。 开发环境Mac OS:10.11.6Android Studio:2.3.3adb:1.0.36gradle:3.5jenkins:2.70 运行JenkinsJenkins">
+  <meta name="description" content="Android项目开发过程中，每次测试打包都会浪费较长的时间，为了能节省时间、将精力更多的放在代码编写上，可利用Jenkins工具进行自动化构建打包，当仓库中的代码有变化时，自动构建打包，节省时间也是迈出开发自动化的第一步。 开发环境Mac OS:10.11.6Android Studio:2.3.3adb:1.0.36gradle:3.5jenkins:2.70">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android使用Jenkins实现自动化打包">
 <meta property="og:url" content="http://yoursite.com/2017/07/22/android-2017-0722-0853/index.html">
 <meta property="og:site_name" content="loaLakers">
-<meta property="og:description" content="Android项目开发过程中，每次测试打包都会浪费较长的时间，为了能节省时间、将精力更多的放在代码编写上，可利用Jenkins工具进行自动化构建打包，当仓库中的代码有变化时，自动构建打包，节省时间也是迈出开发自动化的第一步。 开发环境Mac OS:10.11.6Android Studio:2.3.3adb:1.0.36gradle:3.5jenkins:2.70 运行JenkinsJenkins">
+<meta property="og:description" content="Android项目开发过程中，每次测试打包都会浪费较长的时间，为了能节省时间、将精力更多的放在代码编写上，可利用Jenkins工具进行自动化构建打包，当仓库中的代码有变化时，自动构建打包，节省时间也是迈出开发自动化的第一步。 开发环境Mac OS:10.11.6Android Studio:2.3.3adb:1.0.36gradle:3.5jenkins:2.70">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-22-1.png">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-22-2.png">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-22-3.png">
@@ -29,10 +29,10 @@
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-22-12.png">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-22-13.png">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-22-14.png">
-<meta property="og:updated_time" content="2017-07-22T01:24:52.000Z">
+<meta property="og:updated_time" content="2017-07-22T02:42:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android使用Jenkins实现自动化打包">
-<meta name="twitter:description" content="Android项目开发过程中，每次测试打包都会浪费较长的时间，为了能节省时间、将精力更多的放在代码编写上，可利用Jenkins工具进行自动化构建打包，当仓库中的代码有变化时，自动构建打包，节省时间也是迈出开发自动化的第一步。 开发环境Mac OS:10.11.6Android Studio:2.3.3adb:1.0.36gradle:3.5jenkins:2.70 运行JenkinsJenkins">
+<meta name="twitter:description" content="Android项目开发过程中，每次测试打包都会浪费较长的时间，为了能节省时间、将精力更多的放在代码编写上，可利用Jenkins工具进行自动化构建打包，当仓库中的代码有变化时，自动构建打包，节省时间也是迈出开发自动化的第一步。 开发环境Mac OS:10.11.6Android Studio:2.3.3adb:1.0.36gradle:3.5jenkins:2.70">
 <meta name="twitter:image" content="http://yoursite.com/assets/blogImg/2017-07-22-1.png">
   
     <link rel="alternative" href="/atom.xml" title="loaLakers" type="application/atom+xml">
@@ -189,8 +189,8 @@
       
         <p>Android项目开发过程中，每次测试打包都会浪费较长的时间，<br>为了能节省时间、将精力更多的放在代码编写上，<br>可利用Jenkins工具进行自动化构建打包，<br>当仓库中的代码有变化时，自动构建打包，<br>节省时间也是迈出开发自动化的第一步。</p>
 <h3 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h3><p>Mac OS:10.11.6<br>Android Studio:2.3.3<br>adb:1.0.36<br>gradle:3.5<br>jenkins:2.70</p>
-<h3 id="运行Jenkins"><a href="#运行Jenkins" class="headerlink" title="运行Jenkins"></a>运行Jenkins</h3><p>Jenkins安装完成之后，直接命令行中运行jenkins命令即可，<br>运行成功之后在浏览器中输入<br><a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a>。</p>
 <a id="more"></a>
+<h3 id="运行Jenkins"><a href="#运行Jenkins" class="headerlink" title="运行Jenkins"></a>运行Jenkins</h3><p>Jenkins安装完成之后，直接命令行中运行jenkins命令即可，<br>运行成功之后在浏览器中输入<br><a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a>。</p>
 <h3 id="配置Jenkins插件"><a href="#配置Jenkins插件" class="headerlink" title="配置Jenkins插件"></a>配置Jenkins插件</h3><p>第一次运行会提示安装插件，选择推荐安装即可。</p>
 <p><img src="/assets/blogImg/2017-07-22-1.png" alt=""></p>
 <p>安装完成之后，提示设置用户名、密码等信息。</p>
@@ -440,7 +440,7 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color3">Android</a>
+                <a href="javascript:void(0)" class="color1">Other</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -448,7 +448,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color1">Other</a>
+                <a href="javascript:void(0)" class="color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
