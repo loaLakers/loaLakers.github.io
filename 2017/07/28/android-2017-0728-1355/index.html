@@ -6,17 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>loaLakers</title>
+  <title>Nginx搭建https服务器 | loaLakers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="loaLakers">
-<meta property="og:type" content="website">
-<meta property="og:title" content="loaLakers">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="开发需要搭建https环境，自建证书，采用Nginx搭建。 开发环境Ubuntu:16.04.2java:1.8.0_111nginx:1.12.0OpenSSL:1.0.2g 生成证书 进入Nginx配置目录1cd /usr/local/nginx/conf/">
+<meta name="keywords" content="Nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx搭建https服务器">
+<meta property="og:url" content="http://yoursite.com/2017/07/28/android-2017-0728-1355/index.html">
 <meta property="og:site_name" content="loaLakers">
-<meta property="og:description" content="loaLakers">
+<meta property="og:description" content="开发需要搭建https环境，自建证书，采用Nginx搭建。 开发环境Ubuntu:16.04.2java:1.8.0_111nginx:1.12.0OpenSSL:1.0.2g 生成证书 进入Nginx配置目录1cd /usr/local/nginx/conf/">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-28-1.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-28-2.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-28-3.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-28-4.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-28-5.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-28-6.png">
+<meta property="og:updated_time" content="2017-07-28T06:56:28.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="loaLakers">
-<meta name="twitter:description" content="loaLakers">
+<meta name="twitter:title" content="Nginx搭建https服务器">
+<meta name="twitter:description" content="开发需要搭建https环境，自建证书，采用Nginx搭建。 开发环境Ubuntu:16.04.2java:1.8.0_111nginx:1.12.0OpenSSL:1.0.2g 生成证书 进入Nginx配置目录1cd /usr/local/nginx/conf/">
+<meta name="twitter:image" content="http://yoursite.com/assets/blogImg/2017-07-28-1.png">
   
     <link rel="alternative" href="/atom.xml" title="loaLakers" type="application/atom+xml">
   
@@ -152,16 +161,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-android-2017-0728-1355" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-android-2017-0728-1355" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/28/android-2017-0728-1355/">Nginx搭建https服务器</a>
+    <h1 class="article-title" itemprop="name">
+      Nginx搭建https服务器
     </h1>
   
 
@@ -178,11 +185,79 @@
 <li>进入Nginx配置目录<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd /usr/local/nginx/conf/</div></pre></td></tr></table></figure>
 </li>
 </ul>
-        
-          <a class="article-more-a" href="/2017/07/28/android-2017-0728-1355/#more">more >></a>
-        
+<a id="more"></a>
+<ul>
+<li><p>设置server.key</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -des3 -out server.key 1024</div></pre></td></tr></table></figure>
+</li>
+<li><p>参数设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openssl req -new -key server.key -out server.csr</div></pre></td></tr></table></figure>
+</li>
+<li><p>写RSA秘钥</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openssl rsa -in server.key -out server_nopwd.key</div></pre></td></tr></table></figure>
+</li>
+<li><p>获取私钥</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openssl x509 -req -days 365 -in server.csr -signkey server_nopwd.key -out server.crt</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>完成之后会在当前目录中生成server.crt、server.csr、server.key和server_nopwd.key四个文件。</p>
+<p><img src="/assets/blogImg/2017-07-28-1.png" alt=""></p>
+<h3 id="配置Nginx"><a href="#配置Nginx" class="headerlink" title="配置Nginx"></a>配置Nginx</h3><p>编辑nginx.conf文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">        listen       443;</div><div class="line">        ssl on;</div><div class="line">        #server_name  localhost;</div><div class="line"></div><div class="line">        ssl_certificate      /usr/local/nginx/conf/server.crt;</div><div class="line">        ssl_certificate_key  /usr/local/nginx/conf/server_nopwd.key;</div><div class="line"></div><div class="line">        ssl_session_cache    shared:SSL:1m;</div><div class="line">        ssl_session_timeout  5m;</div><div class="line"></div><div class="line">        ssl_ciphers  HIGH:!aNULL:!MD5;</div><div class="line">        ssl_prefer_server_ciphers  on;</div><div class="line"></div><div class="line">        location / &#123;</div><div class="line">            #root   html;</div><div class="line">            #index  index.html index.htm;</div><div class="line">            proxy_pass http://localhost:7009/;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>ssl_certificate和ssl_certificate_key配置刚才生成的文件路径。</p>
+<p>proxy_pass是将https的请求转到<a href="http://localhost:7009/。" target="_blank" rel="external">http://localhost:7009/。</a></p>
+<h3 id="浏览器测试"><a href="#浏览器测试" class="headerlink" title="浏览器测试"></a>浏览器测试</h3><p>首先测试http访问，即上面的7009端口访问。</p>
+<p><img src="/assets/blogImg/2017-07-28-2.png" alt=""></p>
+<p>换成https访问</p>
+<p><img src="/assets/blogImg/2017-07-28-3.png" alt=""></p>
+<h3 id="Android端访问证书"><a href="#Android端访问证书" class="headerlink" title="Android端访问证书"></a>Android端访问证书</h3><p>使用上述生成的自签名的服务器证书server.crt生成对应的bks证书文件。</p>
+<ul>
+<li><p>要生成bks证书，需要bcprov-ext-jdk15on-157.jar（<a href="http://www.bouncycastle.org/latest_releases.html" target="_blank" rel="external">下载地址</a>），且将该文件放到/jdk1.8.0_111/jre/lib/ext目录下。</p>
+</li>
+<li><p>使用下面命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">keytool -genkeypair -ext SAN=IP:47.93.253.45 -importcert -trustcacerts -alias macnginx -keystore /usr/local/nginx/conf/nginx.bks -file /usr/local/nginx/conf/server.crt -storetype BKS -provider org.bouncycastle.jce.provider.BouncyCastleProvider</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这样在当前目录会生成nginx.bks文件。</p>
+<h3 id="Android测试"><a href="#Android测试" class="headerlink" title="Android测试"></a>Android测试</h3><ul>
+<li><p>将nginx.bks文件放在res/raw/目录下。</p>
+</li>
+<li><p>https证书校验代码</p>
+</li>
+</ul>
+<p><img src="/assets/blogImg/2017-07-28-4.png" alt=""></p>
+<ul>
+<li>OkHttpClient设置</li>
+</ul>
+<p><img src="/assets/blogImg/2017-07-28-5.png" alt=""></p>
+<ul>
+<li>界面展示代码</li>
+</ul>
+<p><img src="/assets/blogImg/2017-07-28-6.png" alt=""></p>
+<p>—— END. loaLakers on 07.28</p>
+
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你的赞赏<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -202,339 +277,81 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/28/android-2017-0728-1355/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/07/28/android-2017-0728-1355/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
 
-
-
-
-
-
-
-
   
-    <article id="post-android-2017-0722-0853" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/22/android-2017-0722-0853/">Android使用Jenkins实现自动化打包</a>
-    </h1>
-  
-
-        <a href="/2017/07/22/android-2017-0722-0853/" class="archive-article-date">
-  	<time datetime="2017-07-22T00:53:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-22</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Android项目开发过程中，每次测试打包都会浪费较长的时间，为了能节省时间、将精力更多的放在代码编写上，<br>可利用Jenkins工具进行自动化构建打包，当仓库中的代码有变化时，自动构建打包，节省时间也是迈出开发自动化的第一步。</p>
-<h3 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h3><p>Mac OS:10.11.6<br>Android Studio:2.3.3<br>adb:1.0.36<br>gradle:3.5<br>jenkins:2.70</p>
-        
-          <a class="article-more-a" href="/2017/07/22/android-2017-0722-0853/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">Android</a>
-        </li>
-      
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/22/android-2017-0722-0853/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-database-2017-0720-1106" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/20/database-2017-0720-1106/">oracle数据库监控</a>
-    </h1>
-  
-
-        <a href="/2017/07/20/database-2017-0720-1106/" class="archive-article-date">
-  	<time datetime="2017-07-20T03:06:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-20</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>基于jdbc,<br>简易oracle监控。</p>
-        
-          <a class="article-more-a" href="/2017/07/20/database-2017-0720-1106/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">Database</a>
-        </li>
-      
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/20/database-2017-0720-1106/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-other-2017-0711-0746" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/11/other-2017-0711-0746/">早游校园</a>
-    </h1>
-  
-
-        <a href="/2017/07/11/other-2017-0711-0746/" class="archive-article-date">
-  	<time datetime="2017-07-10T23:46:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-11</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天高温，<br>早起带小子宁出去溜达溜达，<br>小家伙挺高兴。</p>
-        
-          <a class="article-more-a" href="/2017/07/11/other-2017-0711-0746/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color1">Other</a>
-        </li>
-      
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/11/other-2017-0711-0746/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-other-2017-0710-1200" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/10/other-2017-0710-1200/">寄生活费的父亲</a>
-    </h1>
-  
-
-        <a href="/2017/07/10/other-2017-0710-1200/" class="archive-article-date">
-  	<time datetime="2017-07-10T04:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-10</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在银行，<br>看到一位父亲，<br>将零钱叠在一起，<br>满手操劳的手茧。</p>
-<p>“这是存钱吗？”<br>“给读大学的儿子寄生活费。”</p>
-        
-          <a class="article-more-a" href="/2017/07/10/other-2017-0710-1200/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color1">Other</a>
-        </li>
-      
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/10/other-2017-0710-1200/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-php-2017-0710-0950" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/10/php-2017-0710-0950/">PHP-表格数据</a>
-    </h1>
-  
-
-        <a href="/2017/07/10/php-2017-0710-0950/" class="archive-article-date">
-  	<time datetime="2017-07-10T01:36:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-10</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>之前都是使用jsp来写动态页面。<br>刚刚接触PHP。<br>主要是如上所示的图标展示，从数据库获取数据展示。</p>
-<p>表格控件使用的是<a href="http://test.omwteam.com/sChart/" title="sChart" target="_blank" rel="external">sChart</a>。</p>
-        
-          <a class="article-more-a" href="/2017/07/10/php-2017-0710-0950/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">PHP</a>
-        </li>
-      
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/10/php-2017-0710-0950/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
+<nav id="article-nav">
   
   
+    <a href="/2017/07/22/android-2017-0722-0853/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android使用Jenkins实现自动化打包</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+
 
 
           </div>
@@ -556,8 +373,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
