@@ -6,21 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>oracle数据库监控 | loaLakers</title>
+  <title>Oracle数据库数据表同步 | loaLakers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="基于jdbc,简易oracle监控。">
+  <meta name="description" content="项目中需要实现两个oracle数据库的表同步，即地方库有数据后，中间库对应的表中要有同样的数据。 对于DBA而言，首先想到的肯定是ORACLE的DG和GOLDENGATE之类的解决方案，对于程序员而言，第一，JDBC解决，第二，DBLink+触发器。 由于数据量不大，采用第二种方式。 开发环境Oracle:11g">
 <meta name="keywords" content="Database">
 <meta property="og:type" content="article">
-<meta property="og:title" content="oracle数据库监控">
-<meta property="og:url" content="http://yoursite.com/2017/07/20/database-2017-0720-1106/index.html">
+<meta property="og:title" content="Oracle数据库数据表同步">
+<meta property="og:url" content="http://yoursite.com/2017/08/01/database-2017-0801-1508/index.html">
 <meta property="og:site_name" content="loaLakers">
-<meta property="og:description" content="基于jdbc,简易oracle监控。">
-<meta property="og:image" content="http://yoursite.com/assets/blogImg/oracleMonitor.png">
-<meta property="og:updated_time" content="2017-07-22T02:42:28.000Z">
+<meta property="og:description" content="项目中需要实现两个oracle数据库的表同步，即地方库有数据后，中间库对应的表中要有同样的数据。 对于DBA而言，首先想到的肯定是ORACLE的DG和GOLDENGATE之类的解决方案，对于程序员而言，第一，JDBC解决，第二，DBLink+触发器。 由于数据量不大，采用第二种方式。 开发环境Oracle:11g">
+<meta property="og:updated_time" content="2017-08-01T07:26:52.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="oracle数据库监控">
-<meta name="twitter:description" content="基于jdbc,简易oracle监控。">
-<meta name="twitter:image" content="http://yoursite.com/assets/blogImg/oracleMonitor.png">
+<meta name="twitter:title" content="Oracle数据库数据表同步">
+<meta name="twitter:description" content="项目中需要实现两个oracle数据库的表同步，即地方库有数据后，中间库对应的表中要有同样的数据。 对于DBA而言，首先想到的肯定是ORACLE的DG和GOLDENGATE之类的解决方案，对于程序员而言，第一，JDBC解决，第二，DBLink+触发器。 由于数据量不大，采用第二种方式。 开发环境Oracle:11g">
   
     <link rel="alternative" href="/atom.xml" title="loaLakers" type="application/atom+xml">
   
@@ -156,28 +154,40 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-database-2017-0720-1106" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-database-2017-0801-1508" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      oracle数据库监控
+      Oracle数据库数据表同步
     </h1>
   
 
-        <a href="/2017/07/20/database-2017-0720-1106/" class="archive-article-date">
-  	<time datetime="2017-07-20T03:06:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-20</time>
+        <a href="/2017/08/01/database-2017-0801-1508/" class="archive-article-date">
+  	<time datetime="2017-08-01T07:08:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-01</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>基于jdbc,<br>简易oracle监控。</p>
+        <p>项目中需要实现两个oracle数据库的表同步，<br>即地方库有数据后，中间库对应的表中要有同样的数据。</p>
+<p>对于DBA而言，首先想到的肯定是ORACLE的DG和GOLDENGATE之类的解决方案，<br>对于程序员而言，第一，JDBC解决，第二，DBLink+触发器。</p>
+<p>由于数据量不大，采用第二种方式。</p>
+<h3 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h3><p>Oracle:11g</p>
 <a id="more"></a>
-<p><img src="/assets/blogImg/oracleMonitor.png" alt=""></p>
-<p>—— END. loaLakers on 07.20 </p>
+<h3 id="创建DBLink"><a href="#创建DBLink" class="headerlink" title="创建DBLink"></a>创建DBLink</h3><p>在地方库创建Dblink</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">create database link TOTEST connect to test identified by test using </div><div class="line">&apos;(DESCRIPTION =</div><div class="line">    (ADDRESS_LIST =</div><div class="line">      (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.3.15)(PORT = 1521))</div><div class="line">    )</div><div class="line">    (CONNECT_DATA =</div><div class="line">      (SERVICE_NAME = orcl)</div><div class="line">    )</div><div class="line">  )&apos;</div></pre></td></tr></table></figure>
+<p>创建完成之后，测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from TEST.ACCESS_TEST@TOTEST;</div></pre></td></tr></table></figure>
+<p>如果创建成功，在地方库通过DBLink可以访问中间库的数据表。</p>
+<h3 id="创建同义词"><a href="#创建同义词" class="headerlink" title="创建同义词"></a>创建同义词</h3><p>为了方便创建同义词</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">create or replace synonym TEST_SY</div><div class="line">for TEST.ACCESS_TEST@TOTEST;</div></pre></td></tr></table></figure>
+<p>测试同义词<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from TEST_SY;</div></pre></td></tr></table></figure></p>
+<p>如果创建成功，可以看到和上一步同样的结果。</p>
+<h3 id="创建触发器"><a href="#创建触发器" class="headerlink" title="创建触发器"></a>创建触发器</h3><p>当地方库ACCESS_TEST表插入数据的时候，同样向中间库插入数据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">CREATE OR REPLACE TRIGGER TRI_TEST</div><div class="line">BEFORE INSERT ON ACCESS_TEST FOR EACH ROW</div><div class="line">BEGIN</div><div class="line"></div><div class="line">  INSERT INTO TEST_SY(WH,VALUE,SJ,ZLC,ACCESSID) VALUES (:NEW.WH,:NEW.VALUE,:NEW.SJ,:NEW.ZLC,:NEW.ACCESSID);</div><div class="line"></div><div class="line">END TRI_TEST;</div></pre></td></tr></table></figure></p>
+<p>—— END. loaLakers on 08.01</p>
 
       
 
@@ -268,7 +278,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/07/20/database-2017-0720-1106/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/08/01/database-2017-0801-1508/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -282,18 +292,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/07/22/android-2017-0722-0853/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Android使用Jenkins实现自动化打包
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/07/11/other-2017-0711-0746/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">早游校园</div>
+    <a href="/2017/07/28/nginx-2017-0728-1355/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Nginx搭建https服务器</div>
       <i class="icon-circle-right"></i>
     </a>
   
