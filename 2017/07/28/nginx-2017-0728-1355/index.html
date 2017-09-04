@@ -21,7 +21,7 @@
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-28-4.png">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-28-5.png">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/2017-07-28-6.png">
-<meta property="og:updated_time" content="2017-07-28T06:56:28.000Z">
+<meta property="og:updated_time" content="2017-09-04T05:29:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nginx搭建https服务器">
 <meta name="twitter:description" content="开发需要搭建https环境，自建证书，采用Nginx搭建。 开发环境Ubuntu:16.04.2java:1.8.0_111nginx:1.12.0OpenSSL:1.0.2g 生成证书 进入Nginx配置目录1cd /usr/local/nginx/conf/">
@@ -233,6 +233,15 @@
 <li>界面展示代码</li>
 </ul>
 <p><img src="/assets/blogImg/2017-07-28-6.png" alt=""></p>
+<h3 id="IOS端证书访问"><a href="#IOS端证书访问" class="headerlink" title="IOS端证书访问"></a>IOS端证书访问</h3><ul>
+<li><p>使用下面命令生成cer证书</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openssl x509 -in server.crt -out nginx.cer -outform der</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成证书后将nginx.cer拖入IOS工程中</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">#pragma mark - 设置证书</div><div class="line">- (AFSecurityPolicy*)customSecurityPolicy</div><div class="line">&#123;</div><div class="line">    /**** SSL Pinning ****/</div><div class="line">    NSString *cerPath = [[NSBundle mainBundle] pathForResource:@&quot;nginx&quot; ofType:@&quot;cer&quot;];</div><div class="line">    NSData *certData = [NSData dataWithContentsOfFile:cerPath];</div><div class="line">    //AFSSLPinningModeCertificate 使用证书验证模式</div><div class="line">    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];</div><div class="line">    //allowInvalidCertificates 是否允许无效证书（也就是自建的证书），默认为NO</div><div class="line">    //如果是需要验证自建证书，需要设置为YES</div><div class="line">    securityPolicy.allowInvalidCertificates = YES;</div><div class="line">    securityPolicy.validatesDomainName = NO;</div><div class="line">    NSSet *set = [[NSSet alloc] initWithObjects:certData, nil];</div><div class="line">    securityPolicy.pinnedCertificates = set;</div><div class="line">    /**** SSL Pinning ****/</div><div class="line"></div><div class="line">    return securityPolicy;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</div><div class="line"></div><div class="line">[manager setSecurityPolicy:[self customSecurityPolicy]];</div></pre></td></tr></table></figure></p>
 <p>—— END. loaLakers on 07.28</p>
 
       
